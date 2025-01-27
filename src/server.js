@@ -4,6 +4,8 @@ const fs = require('fs');
 const pool = require('./config/database');
 const routes = require('./routes/routes')
 const authRoutes = require('./routes/auth')
+const path = require('path');
+const schemaPath = path.resolve(__dirname, 'models', 'Schema.sql');
 
 const app = express();
 app.use(cors({
@@ -21,7 +23,7 @@ const initializeDatabase = async () => {
             console.error('Error connecting to the database:', err);
         });
         try {
-            const schema = fs.readFileSync('./models/Schema.sql', 'utf8');
+            const schema = fs.readFileSync(schemaPath, 'utf8');
             const queries = schema.split(';').filter(query => query.trim());
             for (const query of queries) {
                 await pool.query(query);
